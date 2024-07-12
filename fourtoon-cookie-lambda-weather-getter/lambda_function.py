@@ -60,7 +60,7 @@ def haversine(lat1, lon1, lat2, lon2):
 
 
 def request_weather_data(station, date):
-    api_key = os.getenv("API_KEY")
+    api_key = os.getenv("WEATHER_API_KEY") # AWS 환경 변수
 
     url = "http://apis.data.go.kr/1360000/AsosHourlyInfoService/getWthrDataList"
 
