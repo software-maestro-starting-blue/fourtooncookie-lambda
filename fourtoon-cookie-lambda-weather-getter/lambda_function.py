@@ -6,8 +6,8 @@ import os
 def lambda_handler(event, context):
     query = event["queryStringParameters"]
 
-    target_lat = query["latitude"]
-    target_lon = query["longtitude"]
+    target_lat = float(query["latitude"])
+    target_lon = float(query["longtitude"])
     month = ("0" if (len(query["month"]) == 1) else "") + query["month"]
     day = ("0" if (len(query["day"]) == 1) else "") + query["day"]
     date = query["year"] + month + day
@@ -41,6 +41,7 @@ def get_closest_station(latitude, longtitude):
         station_id = data["id"][i]
         station_lat = data["lat"][i]
         station_lon = data["lon"][i]
+    
         distance = haversine(latitude, longtitude, station_lat, station_lon)
         if distance < min_distance:
             min_distance = distance
@@ -62,59 +63,81 @@ def haversine(lat1, lon1, lat2, lon2):
 def request_weather_data(station, date):
     api_key = os.getenv("WEATHER_API_KEY") # AWS 환경 변수
 
-    url = "http://apis.data.go.kr/1360000/AsosHourlyInfoService/getWthrDataList"
+    url = "https://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList"
 
     params = {
-        'serviceKey': api_key,
-        'pageNo': '1',
-        'numOfRows': '1',  # 필요한 데이터 수
-        'dataType': 'JSON',  # JSON 형식으로 설정
-        'dataCd': 'ASOS',  # 종관기상관측자료 코드
-        'dateCd': 'DAY',  # 시간 단위 자료
-        'startDt': date,  # 조회 시작 날짜
-        'endDt': date,  # 조회 종료 날짜
-        'stnIds': str(station)  # 서울의 기상관측소 ID
+        "serviceKey": api_key,
+        "pageNo": "1",
+        "numOfRows": "10",  # 필요한 데이터 수
+        "dataType": "JSON",  # JSON 형식으로 설정
+        "dataCd": "ASOS",  # 종관기상관측자료 코드
+        "dateCd": "DAY",  # 시간 단위 자료
+        "startDt": date,  # 조회 시작 날짜
+        "endDt": date,  # 조회 종료 날짜
+        "stnIds": str(station)  # 기상관측소 ID
     }
 
-    response = requests.get(url, params=params)
+    back = ""
+
+    for k, v in params.items():
+        back += k + "=" + v + "&"
+    
+    back = back[:-1]
+
+    response = requests.get(url + "?" + back)
 
     if response.status_code != 200:
         return None
     
     data = response.json()
 
-    weather_data = data["body"]["items"]["item"][0]
+    weather_data = data["response"]["body"]["items"]["item"][0]
 
     return weather_data
 
 
+def convert_to_float(value, default=0.0):
+    try:
+        return float(value)
+    except ValueError:
+        return default
+
+
 def get_weather_status(weather_data):
     # TODO weather_status를 weather_id로 줄 수 있도록
-    if weather_data['avgTca'] <= 2 and weather_data['sumRn'] == 0:
-        return "맑음"
-    
-    if weather_data['avgTca'] >= 8 and weather_data['sumRn'] == 0:
-        return "흐림"
-    
-    if weather_data['sumRn'] > 0 and weather_data['avgTa'] > 0:
-        return "비"
-    
-    if weather_data['sumRn'] > 0 and weather_data['avgTa'] <= 0:
-        return "눈"
-    
-    if weather_data['maxInsWs'] >= 10:
-        return "바람"
-    
-    if '황사' in weather_data['iscs']:
-        return "황사"
-    
-    if weather_data['maxTa'] >= 35:
-        return "폭염"
-    
-    if weather_data['minTa'] <= -10:
-        return "한파"
-    
-    if '태풍' in weather_data['iscs'] and weather_data['maxInsWs'] >= 20:
-        return "태풍"
-    
-    return "기타"
+    avgTca = convert_to_float(weather_data.get('avgTca', '0'))
+    sumRn = convert_to_float(weather_data.get('sumRn', '0'))
+    avgTa = convert_to_float(weather_data.get('avgTa', '0'))
+    maxInsWs = convert_to_float(weather_data.get('maxInsWs', '0'))
+    maxTa = convert_to_float(weather_data.get('maxTa', '0'))
+    minTa = convert_to_float(weather_data.get('minTa', '0'))
+    iscs = weather_data.get('iscs', '')
+
+    if avgTca <= 2 and sumRn == 0:
+        return "clear"
+
+    if avgTca >= 8 and sumRn == 0:
+        return "cloudy"
+
+    if sumRn > 0 and avgTa > 0:
+        return "rain"
+
+    if sumRn > 0 and avgTa <= 0:
+        return "snow"
+
+    if maxInsWs >= 10:
+        return "wind"
+
+    if '황사' in iscs:
+        return "yellow dust"
+
+    if maxTa >= 35:
+        return "hot"
+
+    if minTa <= -10:
+        return "cold"
+
+    if '태풍' in iscs and maxInsWs >= 20:
+        return "typhoon"
+
+    return "other"
