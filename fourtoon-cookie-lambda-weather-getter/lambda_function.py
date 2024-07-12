@@ -4,17 +4,30 @@ import requests
 import os
 
 def lambda_handler(event, context):
-    query = event["queryStringParameters"]
 
-    target_lat = float(query["latitude"])
-    target_lon = float(query["longtitude"])
-    month = ("0" if (len(query["month"]) == 1) else "") + query["month"]
-    day = ("0" if (len(query["day"]) == 1) else "") + query["day"]
-    date = query["year"] + month + day
+    try:
+        query = event["queryStringParameters"]
+
+        target_lat = float(query["latitude"])
+        target_lon = float(query["longtitude"])
+        month = ("0" if (len(query["month"]) == 1) else "") + query["month"]
+        day = ("0" if (len(query["day"]) == 1) else "") + query["day"]
+        date = query["year"] + month + day
+    except:
+        return {
+            'statusCode': 400,
+            'body': json.dumps("요청 인자가 잘 못 되었습니다.")
+        }
 
     closest_station = get_closest_station(target_lat, target_lon)
 
     weather_data = request_weather_data(closest_station, date)
+
+    if weather_data == None:
+        return {
+            'statusCode': 500,
+            'body': json.dumps("날씨 정보를 받아올 수 없습니다.")
+        }
 
     weather_status = get_weather_status(weather_data)
 
@@ -91,9 +104,11 @@ def request_weather_data(station, date):
     
     data = response.json()
 
-    weather_data = data["response"]["body"]["items"]["item"][0]
-
-    return weather_data
+    try:
+        weather_data = data["response"]["body"]["items"]["item"][0]
+        return weather_data
+    except:
+        return None
 
 
 def convert_to_float(value, default=0.0):
