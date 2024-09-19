@@ -1,0 +1,41 @@
+''' SYNOPSIS PROMPT (SYSTEM) '''
+SYNOPSIS_PROMPT: str = ""
+SYNOPSIS_PROMPT_FILE_PATH = './prompt/synopsis_prompt.txt'
+
+with open(SYNOPSIS_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
+    SYNOPSIS_PROMPT = f.read()
+
+def get_synopsis_prompt():
+    return SYNOPSIS_PROMPT
+
+
+''' IMAGE PROMPT '''
+IMAGE_PROMPT: str = ""
+IMAGE_PROMPT_FILE_PATH = './prompt/image_prompt.txt'
+
+with open(IMAGE_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
+    IMAGE_PROMPT = f.read()
+
+def get_image_prompt(scene_prompts: list[str]):
+    return IMAGE_PROMPT.replace("$cut_prompt", "\n".join(scene_prompts))
+
+
+''' CUT PROMPT '''
+CUT_PROMPT: str = ""
+CUT_PROMPT_FILE_PATH = "./prompt/cut_prompt.txt"
+
+with open(CUT_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
+    CUT_PROMPT = f.read()
+
+def get_cut_prompt(i: int, background: str, timeline: str, weather: str, situation: str):
+    now_cut_prompt = str(CUT_PROMPT) # str copy
+
+    # 컷의 내용을 기존 형식에 주입시킵니다.
+    now_cut_prompt = now_cut_prompt.replace("$i", str(i + 1))
+    now_cut_prompt = now_cut_prompt.replace("$background", background)
+    now_cut_prompt = now_cut_prompt.replace("$timeline", timeline)
+    now_cut_prompt = now_cut_prompt.replace("$weather", weather)
+
+    now_cut_prompt = now_cut_prompt.replace("$situation", situation)
+
+    return now_cut_prompt
