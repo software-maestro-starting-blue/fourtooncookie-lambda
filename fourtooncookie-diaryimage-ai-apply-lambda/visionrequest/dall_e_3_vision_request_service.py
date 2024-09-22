@@ -7,7 +7,7 @@ from io import BytesIO
 import boto3
 
 from vision_request_service import VisionRequestService
-from prompt import get_image_prompt
+from prompt import get_dalle3_image_prompt
 
 class DallE3VisionRequestService(VisionRequestService):
 
@@ -21,7 +21,7 @@ class DallE3VisionRequestService(VisionRequestService):
         self.__bucket_name = bucket_name
 
     def request_vision(self, diary_id: int, character_id: int, prompts: list[str]):
-        image_prompt = get_image_prompt(prompts)
+        image_prompt = get_dalle3_image_prompt(prompts)
         response = self.__openai.images.generate(
             model="dall-e-3",
             n=1,
