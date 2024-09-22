@@ -9,17 +9,6 @@ def get_synopsis_prompt():
     return SYNOPSIS_PROMPT
 
 
-''' IMAGE PROMPT '''
-IMAGE_PROMPT: str = ""
-IMAGE_PROMPT_FILE_PATH = './prompt/image_prompt.txt'
-
-with open(IMAGE_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
-    IMAGE_PROMPT = f.read()
-
-def get_image_prompt(scene_prompts: list[str]):
-    return IMAGE_PROMPT.replace("$cut_prompt", "\n".join(scene_prompts))
-
-
 ''' CUT PROMPT '''
 CUT_PROMPT: str = ""
 CUT_PROMPT_FILE_PATH = "./prompt/cut_prompt.txt"
@@ -39,3 +28,12 @@ def get_cut_prompt(i: int, background: str, timeline: str, weather: str, situati
     now_cut_prompt = now_cut_prompt.replace("$situation", situation)
 
     return now_cut_prompt
+''' DALLE3 IMAGE PROMPT '''
+DALLE3_IMAGE_PROMPT: str = ""
+DALLE3_IMAGE_PROMPT_FILE_PATH = './prompt/image_prompt.txt'
+
+with open(DALLE3_IMAGE_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
+    DALLE3_IMAGE_PROMPT = f.read()
+
+def get_dalle3_image_prompt(scene_prompts: list[str]):
+    return DALLE3_IMAGE_PROMPT.replace("$cut_prompt", "\n".join(scene_prompts))
