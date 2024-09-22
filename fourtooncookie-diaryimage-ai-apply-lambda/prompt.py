@@ -28,6 +28,18 @@ def get_cut_prompt(i: int, background: str, timeline: str, weather: str, situati
     now_cut_prompt = now_cut_prompt.replace("$situation", situation)
 
     return now_cut_prompt
+
+''' IMAGE MODIFY PROMPT '''
+IMAGE_MODIFY_PROMPT: str = ""
+IMAGE_MODIFY_PROMPT_FILE_PATH = './prompt/image_modify_prompt.txt'
+
+with open(IMAGE_MODIFY_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
+    IMAGE_MODIFY_PROMPT = f.read()
+
+def get_image_modify_prompt():
+    return IMAGE_MODIFY_PROMPT
+
+
 ''' DALLE3 IMAGE PROMPT '''
 DALLE3_IMAGE_PROMPT: str = ""
 DALLE3_IMAGE_PROMPT_FILE_PATH = './prompt/image_prompt.txt'
