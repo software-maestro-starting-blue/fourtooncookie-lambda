@@ -10,7 +10,7 @@ class GPT4oLLMService(LLMService):
         self.__open_ai = openai
         self.__gpt_model = 'gpt-4.0-mini'
 
-    def get_llm(self, system_prompt: str, user_prompt: str):
+    def get_llm(self, system_prompt: str, user_prompt: str) -> str:
         response = self.__open_ai.create_completion(
             model=self.__gpt_model, 
             messages=[
