@@ -20,7 +20,7 @@ class DallE3VisionRequestService(VisionRequestService):
         self.__s3 = boto3.client('s3')
         self.__bucket_name = bucket_name
 
-    def request_vision(self, diary_id: int, character_id: int, prompts: list[str]):
+    def request_vision(self, diary_id: int, character_id: int, character_base_prompt: str, prompts: list[str]):
         image_prompt = get_dalle3_image_prompt(prompts)
         response = self.__openai.images.generate(
             model="dall-e-3",
