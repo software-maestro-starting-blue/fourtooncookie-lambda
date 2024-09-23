@@ -42,13 +42,13 @@ class DallE3VisionRequestService(VisionRequestService):
             self.__upload_s3(diary_id, i, image_bytesio)
 
 
-    def __decode_base64_image(base64_str):
+    def __decode_base64_image(self, base64_str):
         image_data = base64.b64decode(base64_str)
         image = Image.open(BytesIO(image_data))
         return image
 
     # 이미지를 중앙을 기준으로 4등분
-    def __split_image(image):
+    def __split_image(self, image):
         width, height = image.size
         mid_x, mid_y = width // 2, height // 2
 
@@ -60,7 +60,7 @@ class DallE3VisionRequestService(VisionRequestService):
 
         return top_left, top_right, bottom_left, bottom_right
 
-    def __image_to_bytesio(image, format='PNG'):
+    def __image_to_bytesio(self, image, format='PNG'):
         # BytesIO 객체 생성
         image_io = BytesIO()
         
