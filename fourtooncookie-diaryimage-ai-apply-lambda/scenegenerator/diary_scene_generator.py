@@ -1,4 +1,4 @@
-from scene_generator import SceneGenerator
+from scenegenerator.scene_generator import SceneGenerator
 from llm.llm_service import LLMService
 import json
 from prompt import get_synopsis_prompt, get_cut_prompt, get_image_modify_prompt

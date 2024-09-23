@@ -1,4 +1,4 @@
-from llm_service import LLMService
+from llm.llm_service import LLMService
 from openai import OpenAI
 
 class GPT4oLLMService(LLMService):

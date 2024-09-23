@@ -6,7 +6,7 @@ from io import BytesIO
 
 import boto3
 
-from vision_request_service import VisionRequestService
+from visionrequest.vision_request_service import VisionRequestService
 from prompt import get_dalle3_image_prompt
 
 class DallE3VisionRequestService(VisionRequestService):
