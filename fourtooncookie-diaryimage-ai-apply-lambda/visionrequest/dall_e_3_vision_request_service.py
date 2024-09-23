@@ -15,9 +15,9 @@ class DallE3VisionRequestService(VisionRequestService):
     __s3: boto3.client
     __bucket_name: str
 
-    def __init__(self, openai: OpenAI, bucket_name: str):
+    def __init__(self, openai: OpenAI, s3client: boto3.client, bucket_name: str):
         self.__openai = openai
-        self.__s3 = boto3.client('s3')
+        self.__s3 = s3client
         self.__bucket_name = bucket_name
 
     def request_vision(self, diary_id: int, character_id: int, character_base_prompt: str, prompts: list[str]):
