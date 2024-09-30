@@ -1,6 +1,6 @@
 import os
 from openai import OpenAI
-from portkey_ai import PORTKEY_GATEWAY_URL, createHeaders
+from portkey_ai import PORTKEY_GATEWAY_URL, createHeaders, Portkey
 import boto3
 from llm.llm_service import LLMService
 from llm.gpt4o_llm_service import GPT4oLLMService
@@ -20,6 +20,10 @@ openai: OpenAI = OpenAI(
         provider="openai",
         api_key=PORTKEY_API_KEY
     )
+)
+
+portkey = Portkey(
+    api_key=PORTKEY_API_KEY
 )
 
 
