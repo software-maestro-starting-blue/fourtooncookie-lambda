@@ -49,3 +49,13 @@ with open(DALLE3_IMAGE_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
 
 def get_dalle3_image_prompt(scene_prompts: list[str]):
     return DALLE3_IMAGE_PROMPT.replace("$cut_prompt", "\n".join(scene_prompts))
+
+''' STABLE DIFFUSION MODIFY PROMPT '''
+STABLE_DIFFUSION_MODIFY_PROMPT: str = ""
+STABLE_DIFFUSION_MODIFY_PROMPT_FILE_PATH = './prompt/stable_diffusion_modify_prompt.txt'
+
+with open(STABLE_DIFFUSION_MODIFY_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
+    STABLE_DIFFUSION_MODIFY_PROMPT = f.read()
+
+def get_stable_diffusion_modify_prompt():
+    return STABLE_DIFFUSION_MODIFY_PROMPT
