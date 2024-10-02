@@ -5,7 +5,7 @@ from prompt import get_stable_diffusion_modify_prompt
 import boto3
 import json
 
-class StableDiffusionVisionRequestService(VisionRequestService):
+class SQSStableDiffusionVisionRequestService(VisionRequestService):
 
     __sqs: boto3.client
     __queue_url: str
