@@ -12,8 +12,8 @@ class DiarySceneGenerator(SceneGenerator):
         variables = diary_content
         
         for executer in self.__executers:
-
-            if executer.validate_variables(variables):
+            
+            if not executer.validate_variables(variables):
                 raise Exception("Invalid variables", variables, executer.__class__.__name__)
             
             variables = executer.execute(variables)
