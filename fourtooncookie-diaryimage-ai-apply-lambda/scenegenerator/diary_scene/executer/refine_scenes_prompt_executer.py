@@ -1,11 +1,11 @@
 from executer.prompt_executer import PromptExecuter
-from executer.refine_scenes_prompt_executer import RefineScenesPromptExecuter
+from scenegenerator.diary_scene.executer.refine_scene_prompt_executer import RefineScenePromptExecuter
 
 class RefineScenesPromptExecuter(PromptExecuter):
 
-    __refine_scene_prompt_executer: RefineScenesPromptExecuter
+    __refine_scene_prompt_executer: RefineScenePromptExecuter
 
-    def __init__(self, refine_scene_prompt_executer: RefineScenesPromptExecuter):
+    def __init__(self, refine_scene_prompt_executer: RefineScenePromptExecuter):
         self.__refine_scene_prompt_executer = refine_scene_prompt_executer
 
     def execute(self, variables: list):
