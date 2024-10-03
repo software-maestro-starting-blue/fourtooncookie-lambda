@@ -35,6 +35,10 @@ class DallE3VisionRequestService(VisionRequestService):
         image_base64 = response.data[0].b64_json
         image = self.__decode_base64_image(image_base64)
 
+        self.__upload_image(diary_id, image)
+    
+
+    def __upload_image(self, diary_id: int, image: Image):
         top_left, top_right, bottom_left, bottom_right = self.__split_image(image)
 
         for i, image in enumerate([top_left, top_right, bottom_left, bottom_right]):
