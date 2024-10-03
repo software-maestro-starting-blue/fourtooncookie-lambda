@@ -15,11 +15,11 @@ def lambda_handler(body, context):
         content = body['content']
 
         # LLM과 prompt 활용하여 내용 정체
-        prompts = scene_generator.generate_scenes(content)
+        scenes = scene_generator.generate_scenes(content)
 
-        # vision request로 적절한 요청 보내기
+        # vision request로 요청 보내기
         vision_request_service = vision_request_services[character_vision_type]
-        vision_request_service.request_vision(diary_id, character_id, character_base_prompt, prompts)
+        vision_request_service.request_vision(diary_id, character_id, character_base_prompt, scenes)
         
         return True
     except Exception as e:

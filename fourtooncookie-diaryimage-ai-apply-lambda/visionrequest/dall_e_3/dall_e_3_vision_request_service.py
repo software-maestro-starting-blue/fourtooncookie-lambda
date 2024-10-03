@@ -7,21 +7,23 @@ from io import BytesIO
 import boto3
 
 from visionrequest.vision_request_service import VisionRequestService
-from prompt import get_dalle3_image_prompt
+from visionrequest.dall_e_3.executer.scenes_as_image_prompt_convert_executer import ScenesAsImagePromptConvertExecuter
 
 class DallE3VisionRequestService(VisionRequestService):
 
     __openai: OpenAI
     __s3: boto3.client
     __bucket_name: str
+    __scenes_as_image_prompt_convert_executer: ScenesAsImagePromptConvertExecuter
 
-    def __init__(self, openai: OpenAI, s3client: boto3.client, bucket_name: str):
+    def __init__(self, openai: OpenAI, s3client: boto3.client, bucket_name: str, scenes_as_image_prompt_convert_executer: ScenesAsImagePromptConvertExecuter):
         self.__openai = openai
         self.__s3 = s3client
         self.__bucket_name = bucket_name
+        self.__scenes_as_image_prompt_convert_executer = scenes_as_image_prompt_convert_executer
 
-    def request_vision(self, diary_id: int, character_id: int, character_base_prompt: str, prompts: list[str]):
-        image_prompt = get_dalle3_image_prompt(prompts)
+    def request_vision(self, diary_id: int, character_id: int, character_base_prompt: str, scenes: list[str]):
+        image_prompt = self.__scenes_as_image_prompt_convert_executer.execute(scenes)
         response = self.__openai.images.generate(
             model="dall-e-3",
             n=1,
@@ -30,9 +32,7 @@ class DallE3VisionRequestService(VisionRequestService):
             quality="hd",
             response_format="b64_json"
         )
-
         image_base64 = response.data[0].b64_json
-
         image = self.__decode_base64_image(image_base64)
 
         top_left, top_right, bottom_left, bottom_right = self.__split_image(image)
@@ -40,15 +40,13 @@ class DallE3VisionRequestService(VisionRequestService):
         for i, image in enumerate([top_left, top_right, bottom_left, bottom_right]):
             image_bytesio = self.__image_to_bytesio(image)
             self.__upload_s3(diary_id, i, image_bytesio)
-
-
+    
     def __decode_base64_image(self, base64_str):
         image_data = base64.b64decode(base64_str)
         image = Image.open(BytesIO(image_data))
         return image
-
-    # 이미지를 중앙을 기준으로 4등분
-    def __split_image(self, image):
+    
+    def __split_image(self, image): # 이미지를 중앙을 기준으로 4등분
         width, height = image.size
         mid_x, mid_y = width // 2, height // 2
 
@@ -61,21 +59,14 @@ class DallE3VisionRequestService(VisionRequestService):
         return top_left, top_right, bottom_left, bottom_right
 
     def __image_to_bytesio(self, image, format='PNG'):
-        # BytesIO 객체 생성
         image_io = BytesIO()
-        
-        # 이미지를 BytesIO로 저장 (디폴트는 PNG 포맷)
         image.save(image_io, format=format)
-        
-        # 포인터를 처음으로 이동시켜서 이후 읽을 수 있게 설정
         image_io.seek(0)
-        
         return image_io
     
 
     def __upload_s3(self, diary_id: int, grid_position: int, image_bytesio: BytesIO):
         key_name = f"{diary_id}/{grid_position}.png"
-
         try:
             self.__s3.upload_fileobj(image_bytesio, self.__bucket_name, key_name)
         except:
