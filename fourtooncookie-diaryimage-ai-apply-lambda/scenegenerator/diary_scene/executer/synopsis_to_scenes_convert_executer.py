@@ -63,7 +63,7 @@ class SynopsisToScenesConvertExecuter(ConvertExecuter):
 
 
 SCENE_PROMPT: str = ""
-SCENE_PROMPT_FILE_PATH = "../../prompt/scene_prompt.txt"
+SCENE_PROMPT_FILE_PATH = "./prompt/scene_prompt.txt"
 
 with open(SCENE_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
     SCENE_PROMPT = f.read()

@@ -16,7 +16,7 @@ class RefineScenePromptExecuter(PromptExecuter):
 
 
 REFINE_SCENE_PROMPT: str = ""
-REFINE_SCENE_PROMPT_FILE_PATH = '../../prompt/refine_scene_prompt.txt'
+REFINE_SCENE_PROMPT_FILE_PATH = './prompt/refine_scene_prompt.txt'
 
 with open(REFINE_SCENE_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
     REFINE_SCENE_PROMPT = f.read()

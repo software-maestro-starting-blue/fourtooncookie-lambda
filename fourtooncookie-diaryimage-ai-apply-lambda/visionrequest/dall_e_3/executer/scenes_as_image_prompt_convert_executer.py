@@ -12,7 +12,7 @@ class ScenesAsImagePromptConvertExecuter(ConvertExecuter):
 
 
 DALLE3_IMAGE_PROMPT: str = ""
-DALLE3_IMAGE_PROMPT_FILE_PATH = '../../../prompt/dalle3_image_prompt.txt'
+DALLE3_IMAGE_PROMPT_FILE_PATH = './prompt/dalle3_image_prompt.txt'
 
 with open(DALLE3_IMAGE_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
     DALLE3_IMAGE_PROMPT = f.read()

@@ -19,7 +19,7 @@ class SynopsisPromptExecuter(PromptExecuter):
 
 
 SYNOPSIS_PROMPT: str = ""
-SYNOPSIS_PROMPT_FILE_PATH = '../../prompt/synopsis_prompt.txt'
+SYNOPSIS_PROMPT_FILE_PATH = './prompt/synopsis_prompt.txt'
 
 with open(SYNOPSIS_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
     SYNOPSIS_PROMPT = f.read()
