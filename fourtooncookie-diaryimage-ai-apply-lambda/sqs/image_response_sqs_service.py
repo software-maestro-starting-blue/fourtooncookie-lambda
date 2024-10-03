@@ -17,7 +17,7 @@ class ImageResponseSQSService():
                 MessageBody=json.dumps({
                     "diaryId": diary_id,
                     "gridPosition": grid_position,
-                    "status": True
+                    "isSuccess": True
                 })
             )
     
@@ -28,6 +28,6 @@ class ImageResponseSQSService():
                 MessageBody=json.dumps({
                     "diaryId": diary_id,
                     "gridPosition": grid_position,
-                    "status": False
+                    "isSuccess": False
                 })
             )
