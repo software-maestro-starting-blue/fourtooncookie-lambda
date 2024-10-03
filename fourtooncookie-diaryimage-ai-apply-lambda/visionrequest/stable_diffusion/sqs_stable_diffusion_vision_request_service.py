@@ -17,14 +17,14 @@ class SQSStableDiffusionVisionRequestService(VisionRequestService):
 
     def request_vision(self, diary_id: int, character_id: int, character_base_prompt: str, scenes: list[str]):
         for i, scene in enumerate(scenes):
-            scene = self.__scene_as_words_convert_executer.execute(scene)
+            scene_words = self.__scene_as_words_convert_executer.execute(scene)
             
             self.__sqs.send_message(
                 QueueUrl=self.__queue_url,
                 MessageBody=json.dumps({
                     'diaryId': diary_id,
                     'characterId': character_id,
-                    'prompt': character_base_prompt + ', ' + scene,
+                    'prompt': character_base_prompt + ', ' + ", ".join(scene_words),
                     'gridPosition': i
                 })
             )
