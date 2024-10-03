@@ -3,7 +3,7 @@ import os
 OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
 PORTKEY_API_KEY = os.environ['PORTKEY_API_KEY']
 S3_BUCKET_NAME = os.environ['S3_BUCKET_NAME']
-SQS_QUEUE_URL = os.environ['SQS_QUEUE_URL']
+IMAGE_RESPONSE_SQS_QUEUE_URL = os.environ['IMAGE_RESPONSE_SQS_QUEUE_URL']
 
 
 from openai import OpenAI
@@ -62,6 +62,6 @@ vision_request_services: dict[str, VisionRequestService] = {
         openai, s3client, S3_BUCKET_NAME, ScenesAsImagePromptConvertExecuter()
         ),
     "STABLE_DIFFUSION": SQSStableDiffusionVisionRequestService(
-        sqsclient, SQS_QUEUE_URL, SceneAsWordsConvertExecuter()
+        sqsclient, STABLE_DIFFUSION_SQS_QUEUE_URL, SceneAsWordsConvertExecuter()
         )
 }
