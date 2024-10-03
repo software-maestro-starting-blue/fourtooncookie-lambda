@@ -13,7 +13,11 @@ def lambda_handler(body, context):
         character_base_prompt = character['basePrompt']
 
         content = body['content']
-
+    except Exception as e:
+        print(e)
+        return False
+    
+    try:
         # LLM과 prompt 활용하여 내용 정체
         scenes = scene_generator.generate_scenes(content)
 
