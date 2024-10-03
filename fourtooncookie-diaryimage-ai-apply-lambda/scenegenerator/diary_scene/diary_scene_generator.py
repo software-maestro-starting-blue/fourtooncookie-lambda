@@ -17,3 +17,5 @@ class DiarySceneGenerator(SceneGenerator):
                 raise Exception("Invalid variables", variables, executer.__class__.__name__)
             
             variables = executer.execute(variables)
+        
+        return variables
