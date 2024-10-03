@@ -28,4 +28,5 @@ def lambda_handler(body, context):
         return True
     except Exception as e:
         print(e)
+        image_response_sqs_service.send_image_failure_response(diary_id) # 실패 시 SQS에 실패 메시지 전송
         return False
