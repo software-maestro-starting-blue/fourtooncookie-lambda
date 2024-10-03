@@ -1,5 +1,11 @@
 from executer.convert_executer import ConvertExecuter
 
+SCENE_PROMPT: str = ""
+SCENE_PROMPT_FILE_PATH = "./prompt/scene_prompt.txt"
+
+with open(SCENE_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
+    SCENE_PROMPT = f.read()
+
 class SynopsisToScenesConvertExecuter(ConvertExecuter):
 
     def execute(self, variables):
@@ -60,10 +66,3 @@ class SynopsisToScenesConvertExecuter(ConvertExecuter):
                 return False
         
         return True
-
-
-SCENE_PROMPT: str = ""
-SCENE_PROMPT_FILE_PATH = "./prompt/scene_prompt.txt"
-
-with open(SCENE_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
-    SCENE_PROMPT = f.read()

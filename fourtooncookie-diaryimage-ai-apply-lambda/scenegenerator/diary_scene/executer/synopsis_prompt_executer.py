@@ -2,6 +2,13 @@ from executer.prompt_executer import PromptExecuter
 from llm.llm_service import LLMService
 import json
 
+SYNOPSIS_PROMPT: str = ""
+SYNOPSIS_PROMPT_FILE_PATH = './prompt/synopsis_prompt.txt'
+
+with open(SYNOPSIS_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
+    SYNOPSIS_PROMPT = f.read()
+
+
 class SynopsisPromptExecuter(PromptExecuter):
 
     __llm_service: LLMService
@@ -17,9 +24,3 @@ class SynopsisPromptExecuter(PromptExecuter):
     def validate_variables(self, variables) -> bool:
         return isinstance(variables, str)
 
-
-SYNOPSIS_PROMPT: str = ""
-SYNOPSIS_PROMPT_FILE_PATH = './prompt/synopsis_prompt.txt'
-
-with open(SYNOPSIS_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
-    SYNOPSIS_PROMPT = f.read()

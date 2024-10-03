@@ -1,5 +1,12 @@
 from executer.convert_executer import ConvertExecuter
 
+DALLE3_IMAGE_PROMPT: str = ""
+DALLE3_IMAGE_PROMPT_FILE_PATH = './prompt/dalle3_image_prompt.txt'
+
+with open(DALLE3_IMAGE_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
+    DALLE3_IMAGE_PROMPT = f.read()
+
+
 class ScenesAsImagePromptConvertExecuter(ConvertExecuter):
 
     def execute(self, variables):
@@ -9,10 +16,3 @@ class ScenesAsImagePromptConvertExecuter(ConvertExecuter):
         return (isinstance(variables, list) 
                 and all(isinstance(scene, str) for scene in variables) 
                 and len(variables) > 0)
-
-
-DALLE3_IMAGE_PROMPT: str = ""
-DALLE3_IMAGE_PROMPT_FILE_PATH = './prompt/dalle3_image_prompt.txt'
-
-with open(DALLE3_IMAGE_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
-    DALLE3_IMAGE_PROMPT = f.read()
