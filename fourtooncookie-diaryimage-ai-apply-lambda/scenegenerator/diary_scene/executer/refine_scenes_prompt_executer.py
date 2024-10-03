@@ -21,4 +21,8 @@ class RefineScenesPromptExecuter(PromptExecuter):
         if len(variables) == 0:
             return False
         
+        for scene in variables:
+            if not self.__refine_scene_prompt_executer.validate_variables(scene):
+                return False
+        
         return True
