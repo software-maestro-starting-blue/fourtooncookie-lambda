@@ -5,7 +5,7 @@ class SynopsisToScenesConvertExecuter(ConvertExecuter):
     def execute(self, variables):
         cut_prompts = []
 
-        for i, scene_json_data in enumerate(variables.values()):
+        for i, scene_json_data in enumerate(variables):
             situations = "".join([
                 self.__get_person_situation(person_data)
                 for person_data in scene_json_data['persons']
