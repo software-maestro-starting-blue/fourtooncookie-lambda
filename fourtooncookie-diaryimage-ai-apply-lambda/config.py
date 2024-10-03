@@ -3,7 +3,8 @@ import os
 OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
 PORTKEY_API_KEY = os.environ['PORTKEY_API_KEY']
 S3_BUCKET_NAME = os.environ['S3_BUCKET_NAME']
-SQS_QUEUE_URL = os.environ['SQS_QUEUE_URL']
+IMAGE_RESPONSE_SQS_QUEUE_URL = os.environ['IMAGE_RESPONSE_SQS_QUEUE_URL']
+STABLE_DIFFUSION_SQS_QUEUE_URL = os.environ['STABLE_DIFFUSION_SQS_QUEUE_URL']
 
 
 from openai import OpenAI
@@ -27,6 +28,8 @@ import boto3
 s3client: boto3.client = boto3.client('s3')
 sqsclient: boto3.client = boto3.client('sqs', region_name='ap-northeast-2')
 
+from sqs.image_response_sqs_service import ImageResponseSQSService
+image_response_sqs_service: ImageResponseSQSService = ImageResponseSQSService(sqsclient, IMAGE_RESPONSE_SQS_QUEUE_URL)
 
 from llm.llm_service import LLMService
 from llm.gpt4o_llm_service import GPT4oLLMService
@@ -62,6 +65,6 @@ vision_request_services: dict[str, VisionRequestService] = {
         openai, s3client, S3_BUCKET_NAME, ScenesAsImagePromptConvertExecuter()
         ),
     "STABLE_DIFFUSION": SQSStableDiffusionVisionRequestService(
-        sqsclient, SQS_QUEUE_URL, SceneAsWordsConvertExecuter()
+        sqsclient, STABLE_DIFFUSION_SQS_QUEUE_URL, SceneAsWordsConvertExecuter()
         )
 }
