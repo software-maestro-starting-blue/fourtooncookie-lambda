@@ -32,23 +32,28 @@ from sqs.image_response_sqs_service import ImageResponseSQSService
 image_response_sqs_service: ImageResponseSQSService = ImageResponseSQSService(sqsclient, IMAGE_RESPONSE_SQS_QUEUE_URL)
 
 from llm.llm_service import LLMService
-from llm.gpt4o_llm_service import GPT4oLLMService
+from llm.portkey_llm_service import PortkeyLLMService
 
-llm_service: LLMService = GPT4oLLMService(openai)
+llm_service: LLMService = PortkeyLLMService(portkey)
 
 
 from scenegenerator.scene_generator import SceneGenerator
 
 from scenegenerator.diary_scene.diary_scene_generator import DiarySceneGenerator
-from scenegenerator.diary_scene.executer.synopsis_prompt_executer import SynopsisPromptExecuter
-from scenegenerator.diary_scene.executer.synopsis_to_scenes_convert_executer import SynopsisToScenesConvertExecuter
-from scenegenerator.diary_scene.executer.refine_scene_prompt_executer import RefineScenePromptExecuter
-from scenegenerator.diary_scene.executer.refine_scenes_prompt_executer import RefineScenesPromptExecuter
+
+from executer.json_convert_executer import JsonConvertExecuter
+from scenegenerator.diary_scene.executer.synopsis_to_scene_convert_executer import SynopsisToSceneConvertExecuter
+from executer.batch_executer import BatchExecuter
+from executer.simple_portkey_prompt_executer import SimplePortkeyPromptExecuter
+
+SYNOPSIS_PROMPT_ID = os.environ["SYNOPSIS_PROMPT_ID"]
+REFINE_SCENE_PROMPT_ID = os.environ["REFINE_SCENE_PROMPT_ID"]
 
 scene_generator: SceneGenerator = DiarySceneGenerator([
-    SynopsisPromptExecuter(llm_service),
-    SynopsisToScenesConvertExecuter(),
-    RefineScenesPromptExecuter(RefineScenePromptExecuter(llm_service))
+    SimplePortkeyPromptExecuter(llm_service, SYNOPSIS_PROMPT_ID),
+    JsonConvertExecuter(),
+    BatchExecuter(SynopsisToSceneConvertExecuter()),
+    BatchExecuter(SimplePortkeyPromptExecuter(llm_service, REFINE_SCENE_PROMPT_ID)),
 ])
 
 
