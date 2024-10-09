@@ -15,7 +15,7 @@ class RefineScenePromptExecuter(PromptExecuter):
     def __init__(self, llm_service: LLMService):
         self.__llm_service = llm_service
 
-    def execute(self, variables: dict):
+    def execute(self, variables: str) -> str:
         return self.__llm_service.get_llm(REFINE_SCENE_PROMPT, variables)
     
     def validate_variables(self, variables) -> bool:
