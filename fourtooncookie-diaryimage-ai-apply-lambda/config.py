@@ -39,10 +39,10 @@ llm_service: LLMService = PortkeyLLMService(portkey)
 
 from executer.executer import Executer
 
-from executer.json_convert_executer import JsonConvertExecuter
-from executer.synopsis_to_scene_convert_executer import SynopsisToSceneConvertExecuter
+from executer.convert.json_convert_executer import JsonConvertExecuter
+from executer.convert.synopsis_to_scene_convert_executer import SynopsisToSceneConvertExecuter
 from executer.batch_executer import BatchExecuter
-from executer.simple_portkey_prompt_executer import SimplePortkeyPromptExecuter
+from executer.prompt.simple_portkey_prompt_executer import SimplePortkeyPromptExecuter
 
 SYNOPSIS_PROMPT_ID = os.environ["SYNOPSIS_PROMPT_ID"]
 REFINE_SCENE_PROMPT_ID = os.environ["REFINE_SCENE_PROMPT_ID"]
