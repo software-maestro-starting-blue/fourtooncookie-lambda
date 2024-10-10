@@ -19,8 +19,16 @@ def lambda_handler(body, context):
     
     try:
         # LLM과 prompt 활용하여 내용 정체
-        scenes = scene_generator.generate_scenes(content)
+        variables = content
 
+        for executer in scene_generate_executers:
+            if not executer.validate_variables(variables):
+                raise Exception("Invalid variables", variables, executer.__class__.__name__)
+            
+            variables = executer.execute(variables)
+        
+        scenes = variables
+        
         # vision request로 요청 보내기
         vision_request_service = vision_request_services[character_vision_type]
         vision_request_service.request_vision(diary_id, character_id, character_base_prompt, scenes)
