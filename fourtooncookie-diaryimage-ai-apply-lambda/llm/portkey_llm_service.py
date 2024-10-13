@@ -23,7 +23,7 @@ class PortkeyLLMService(LLMService):
         return response.choices[0].message.content
     
     def get_llm_using_portkey(self, prompt_id: str, variables: dict) -> str:
-        response = self.__portkey.chat.completions.create(
+        response = self.__portkey.prompts.completions.create(
             prompt_id=prompt_id,
             variables=variables,
             timeout=20
