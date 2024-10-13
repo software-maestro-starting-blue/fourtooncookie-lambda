@@ -68,7 +68,7 @@ executers_by_vision_type: dict[str, list[Executer]] = {
 
 vision_request_services: dict[str, VisionRequestService] = {
     "DALL_E_3": DallE3VisionRequestService(
-        openai, s3client, S3_BUCKET_NAME
+        openai, s3client, S3_BUCKET_NAME, image_response_sqs_service
         ),
     "STABLE_DIFFUSION": SQSStableDiffusionVisionRequestService(
         sqsclient, STABLE_DIFFUSION_SQS_QUEUE_URL
