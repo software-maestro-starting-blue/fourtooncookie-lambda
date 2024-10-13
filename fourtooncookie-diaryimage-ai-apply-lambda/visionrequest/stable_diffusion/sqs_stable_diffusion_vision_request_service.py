@@ -22,5 +22,6 @@ class SQSStableDiffusionVisionRequestService(VisionRequestService):
                     'characterId': character_id,
                     'prompt': character_base_prompt + ', ' + ", ".join(scene_words),
                     'gridPosition': i
-                })
+                }),
+                MessageGroupId=str(diary_id)
             )
