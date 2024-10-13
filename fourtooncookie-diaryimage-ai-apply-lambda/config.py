@@ -12,7 +12,7 @@ from llm.portkey_llm_service import PortkeyLLMService
 
 from executer.executer import Executer
 
-from executer.convert.json_convert_executer import JsonConvertExecuter
+from executer.convert.string_to_json_convert_executer import StringToJsonConvertExecuter
 from executer.convert.synopsis_to_scene_convert_executer import SynopsisToSceneConvertExecuter
 from executer.batch_executer import BatchExecuter
 from executer.prompt.simple_portkey_prompt_executer import SimplePortkeyPromptExecuter
@@ -55,7 +55,7 @@ SYNOPSIS_PROMPT_ID = os.environ["SYNOPSIS_PROMPT_ID"]
 REFINE_SCENE_PROMPT_ID = os.environ["REFINE_SCENE_PROMPT_ID"]
 scene_generate_executers: list[Executer] = [
     SimplePortkeyPromptExecuter(llm_service, SYNOPSIS_PROMPT_ID),
-    JsonConvertExecuter(),
+    StringToJsonConvertExecuter(),
     BatchExecuter(SynopsisToSceneConvertExecuter()),
     BatchExecuter(SimplePortkeyPromptExecuter(llm_service, REFINE_SCENE_PROMPT_ID)),
 ]

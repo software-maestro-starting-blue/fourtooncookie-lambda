@@ -1,7 +1,7 @@
 from executer.convert.convert_executer import ConvertExecuter
 import json
 
-class JsonConvertExecuter(ConvertExecuter):
+class StringToJsonConvertExecuter(ConvertExecuter):
 
     def execute(self, variables: str):
         return json.loads(variables)
