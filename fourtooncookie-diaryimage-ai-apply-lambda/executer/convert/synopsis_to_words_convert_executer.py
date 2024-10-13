@@ -3,7 +3,7 @@ from executer.convert.convert_executer import ConvertExecuter
 
 class SynopsisToWordsConvertExecuter(ConvertExecuter):
 
-    def execute(self, variables) -> list[str]:
+    def execute(self, variables) -> str:
         words = []
         for person_data in variables['persons']:
             words.append(person_data["action"])
