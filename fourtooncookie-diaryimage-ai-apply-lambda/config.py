@@ -17,7 +17,6 @@ from executer.convert.synopsis_to_scene_convert_executer import SynopsisToSceneC
 from executer.batch_executer import BatchExecuter
 from executer.prompt.simple_portkey_prompt_executer import SimplePortkeyPromptExecuter
 
-from visionrequest.dall_e_3.executer.scenes_as_image_prompt_convert_executer import ScenesAsImagePromptConvertExecuter
 from visionrequest.stable_diffusion.executer.scene_as_words_convert_executer import SceneAsWordsConvertExecuter
 
 from visionrequest.vision_request_service import VisionRequestService
@@ -60,7 +59,6 @@ executers_by_vision_type: dict[str, list[Executer]] = {
         StringToJsonConvertExecuter(),
         BatchExecuter(SynopsisToSceneConvertExecuter()),
         BatchExecuter(SimplePortkeyPromptExecuter(llm_service, REFINE_SCENE_PROMPT_ID)),
-        ScenesAsImagePromptConvertExecuter()
     ],
     "STABLE_DIFFUSION": [
         SimplePortkeyPromptExecuter(llm_service, SYNOPSIS_PROMPT_ID),
@@ -71,7 +69,7 @@ executers_by_vision_type: dict[str, list[Executer]] = {
 
 vision_request_services: dict[str, VisionRequestService] = {
     "DALL_E_3": DallE3VisionRequestService(
-        openai, s3client, S3_BUCKET_NAME, ScenesAsImagePromptConvertExecuter()
+        openai, s3client, S3_BUCKET_NAME
         ),
     "STABLE_DIFFUSION": SQSStableDiffusionVisionRequestService(
         sqsclient, STABLE_DIFFUSION_SQS_QUEUE_URL, SceneAsWordsConvertExecuter()
