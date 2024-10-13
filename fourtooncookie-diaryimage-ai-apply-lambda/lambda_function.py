@@ -19,6 +19,8 @@ def lambda_handler(body, context):
     
     try:
         # LLM과 prompt 활용하여 내용 정체
+        scene_generate_executers = executers_by_vision_type[character_vision_type]
+        
         variables = content
 
         for executer in scene_generate_executers:

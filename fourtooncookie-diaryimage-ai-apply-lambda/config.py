@@ -53,12 +53,21 @@ llm_service: LLMService = PortkeyLLMService(portkey)
 
 SYNOPSIS_PROMPT_ID = os.environ["SYNOPSIS_PROMPT_ID"]
 REFINE_SCENE_PROMPT_ID = os.environ["REFINE_SCENE_PROMPT_ID"]
-scene_generate_executers: list[Executer] = [
-    SimplePortkeyPromptExecuter(llm_service, SYNOPSIS_PROMPT_ID),
-    StringToJsonConvertExecuter(),
-    BatchExecuter(SynopsisToSceneConvertExecuter()),
-    BatchExecuter(SimplePortkeyPromptExecuter(llm_service, REFINE_SCENE_PROMPT_ID)),
-]
+
+executers_by_vision_type: dict[str, list[Executer]] = {
+    "DALL_E_3": [
+        SimplePortkeyPromptExecuter(llm_service, SYNOPSIS_PROMPT_ID),
+        StringToJsonConvertExecuter(),
+        BatchExecuter(SynopsisToSceneConvertExecuter()),
+        BatchExecuter(SimplePortkeyPromptExecuter(llm_service, REFINE_SCENE_PROMPT_ID)),
+        ScenesAsImagePromptConvertExecuter()
+    ],
+    "STABLE_DIFFUSION": [
+        SimplePortkeyPromptExecuter(llm_service, SYNOPSIS_PROMPT_ID),
+        StringToJsonConvertExecuter(),
+        BatchExecuter(SynopsisToSceneConvertExecuter()),
+    ]
+}
 
 vision_request_services: dict[str, VisionRequestService] = {
     "DALL_E_3": DallE3VisionRequestService(
