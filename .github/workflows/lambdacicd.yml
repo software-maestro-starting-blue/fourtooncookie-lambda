@@ -21,5 +21,4 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       # Upload a file to AWS s3
       - name:  Copy index.html to s3
-        run: |
-          echo "hello world" \
+        run: ls
