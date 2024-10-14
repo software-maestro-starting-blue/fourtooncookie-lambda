@@ -2,9 +2,7 @@ name: CI/CD
 
 on:
   workflow_dispatch:
-env:
-  BUCKET_NAME : "BUCKET_NAME"
-  AWS_REGION : "AWS_REGION"
+
 permissions:
   id-token: write # This is required for requesting the JWT
   contents: read  # This is required for actions/checkout
@@ -16,11 +14,11 @@ jobs:
       - name: Git clone the repository
         uses: actions/checkout@v4
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: ROLE-TO-ASSUME
           role-session-name: samplerolesession
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
       # Upload a file to AWS s3
       - name:  Copy index.html to s3
         run: |
