@@ -20,6 +20,6 @@ jobs:
           role-session-name: GitHubActionsDeploySession
           aws-region: ${{ secrets.AWS_REGION }}
       # Upload a file to AWS s3
-      - name:  Copy index.html to s3
-        run: cat README.md |
-          # aws s3 cp README.md s3://${{ secrets.BUCKET_NAME }}/lambda/file.txt \
+      - name: Copy README.md to S3
+        run: |
+          aws s3 cp README.md s3://${{ secrets.BUCKET_NAME }}/lambda/file.txt
