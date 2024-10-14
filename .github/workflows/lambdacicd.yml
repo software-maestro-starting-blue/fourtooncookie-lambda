@@ -25,7 +25,7 @@ jobs:
       - name: sync to S3
         run: |
           BUCKET_NAME=${{ secrets.BUCKET_NAME }}
-          aws s3 cp myLambda.zip s3://$BUCKET_NAME/lambda-deploy/lambda.zip
+          aws s3 cp lambda.zip s3://$BUCKET_NAME/lambda-deploy/lambda.zip
       # - name: Deploy to Lambda using CodeDeploy
       #   uses: aws-actions/aws-codedeploy-deploy@v1
       #   with:
