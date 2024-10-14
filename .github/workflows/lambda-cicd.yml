@@ -1,4 +1,4 @@
-name: CI/CD
+name: Lambda CI/CD
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ permissions:
   contents: read  # This is required for actions/checkout
 
 jobs:
-  S3LambdaUploadTest:
+  LambdaDeploy:
     runs-on: ubuntu-latest
     steps:
       - name: Git clone the repository
@@ -23,7 +23,7 @@ jobs:
         run: |
           cp ./.github/workflows/appspec.yml ./appspec.yml
           zip -r lambda.zip ./fourtooncookie-diaryimage-ai-apply-lambda ./appspec.yml
-      - name: sync to S3
+      - name: Upload to S3
         run: |
           BUCKET_NAME=${{ secrets.BUCKET_NAME }}
           aws s3 cp lambda.zip s3://$BUCKET_NAME/lambda-deploy/lambda.zip
