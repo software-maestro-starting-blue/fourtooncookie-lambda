@@ -12,6 +12,9 @@ from sqs.image_response_sqs_service import ImageResponseSQSService
 DALLE3_IMAGE_PROMPT: str = ""
 DALLE3_IMAGE_PROMPT_FILE_PATH = './prompt/dalle3_image_prompt.txt'
 
+with open(DALLE3_IMAGE_PROMPT_FILE_PATH, mode="rt", encoding='utf-8') as f:
+    DALLE3_IMAGE_PROMPT = f.read()
+
 class DallE3VisionRequestService(VisionRequestService):
 
     __openai: OpenAI
