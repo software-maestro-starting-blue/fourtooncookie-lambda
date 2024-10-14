@@ -6,4 +6,4 @@ Resources:
         Name: "fourtooncookie-diaryimage-ai-apply-lambda"
         Alias: "live"
         CurrentVersion: "1"
-        TargetVersion: "1"
+        TargetVersion: "2"
