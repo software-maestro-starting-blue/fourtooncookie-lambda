@@ -16,9 +16,7 @@ from executer.convert.string_to_json_convert_executer import StringToJsonConvert
 from executer.convert.synopsis_to_scene_convert_executer import SynopsisToSceneConvertExecuter
 from executer.batch_executer import BatchExecuter
 from executer.prompt.simple_portkey_prompt_executer import SimplePortkeyPromptExecuter
-
-from visionrequest.dall_e_3.executer.scenes_as_image_prompt_convert_executer import ScenesAsImagePromptConvertExecuter
-from visionrequest.stable_diffusion.executer.scene_as_words_convert_executer import SceneAsWordsConvertExecuter
+from executer.convert.synopsis_to_words_convert_executer import SynopsisToWordsConvertExecuter
 
 from visionrequest.vision_request_service import VisionRequestService
 from visionrequest.dall_e_3.dall_e_3_vision_request_service import DallE3VisionRequestService
@@ -53,18 +51,26 @@ llm_service: LLMService = PortkeyLLMService(portkey)
 
 SYNOPSIS_PROMPT_ID = os.environ["SYNOPSIS_PROMPT_ID"]
 REFINE_SCENE_PROMPT_ID = os.environ["REFINE_SCENE_PROMPT_ID"]
-scene_generate_executers: list[Executer] = [
-    SimplePortkeyPromptExecuter(llm_service, SYNOPSIS_PROMPT_ID),
-    StringToJsonConvertExecuter(),
-    BatchExecuter(SynopsisToSceneConvertExecuter()),
-    BatchExecuter(SimplePortkeyPromptExecuter(llm_service, REFINE_SCENE_PROMPT_ID)),
-]
+
+executers_by_vision_type: dict[str, list[Executer]] = {
+    "DALL_E_3": [
+        SimplePortkeyPromptExecuter(llm_service, SYNOPSIS_PROMPT_ID),
+        StringToJsonConvertExecuter(),
+        BatchExecuter(SynopsisToSceneConvertExecuter()),
+        BatchExecuter(SimplePortkeyPromptExecuter(llm_service, REFINE_SCENE_PROMPT_ID)),
+    ],
+    "STABLE_DIFFUSION": [
+        SimplePortkeyPromptExecuter(llm_service, SYNOPSIS_PROMPT_ID),
+        StringToJsonConvertExecuter(),
+        BatchExecuter(SynopsisToWordsConvertExecuter()),
+    ]
+}
 
 vision_request_services: dict[str, VisionRequestService] = {
     "DALL_E_3": DallE3VisionRequestService(
-        openai, s3client, S3_BUCKET_NAME, ScenesAsImagePromptConvertExecuter()
+        openai, s3client, S3_BUCKET_NAME, image_response_sqs_service
         ),
     "STABLE_DIFFUSION": SQSStableDiffusionVisionRequestService(
-        sqsclient, STABLE_DIFFUSION_SQS_QUEUE_URL, SceneAsWordsConvertExecuter()
+        sqsclient, STABLE_DIFFUSION_SQS_QUEUE_URL
         )
 }

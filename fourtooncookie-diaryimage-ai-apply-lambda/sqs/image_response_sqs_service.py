@@ -18,7 +18,8 @@ class ImageResponseSQSService():
                     "diaryId": diary_id,
                     "gridPosition": grid_position,
                     "isSuccess": True
-                })
+                }),
+                MessageGroupId=str(diary_id)
             )
     
     def send_image_failure_response(self, diary_id: int):
@@ -29,5 +30,6 @@ class ImageResponseSQSService():
                     "diaryId": diary_id,
                     "gridPosition": grid_position,
                     "isSuccess": False
-                })
+                }),
+                MessageGroupId=str(diary_id)
             )

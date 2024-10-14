@@ -7,31 +7,30 @@ from io import BytesIO
 import boto3
 
 from visionrequest.vision_request_service import VisionRequestService
-from visionrequest.dall_e_3.executer.scenes_as_image_prompt_convert_executer import ScenesAsImagePromptConvertExecuter
 from sqs.image_response_sqs_service import ImageResponseSQSService
+
+DALLE3_IMAGE_PROMPT: str = ""
+DALLE3_IMAGE_PROMPT_FILE_PATH = './prompt/dalle3_image_prompt.txt'
 
 class DallE3VisionRequestService(VisionRequestService):
 
     __openai: OpenAI
     __s3: boto3.client
     __bucket_name: str
-    __scenes_as_image_prompt_convert_executer: ScenesAsImagePromptConvertExecuter
     __image_response_sqs_service: ImageResponseSQSService
 
-    def __init__(self, openai: OpenAI, s3client: boto3.client, bucket_name: str, scenes_as_image_prompt_convert_executer: ScenesAsImagePromptConvertExecuter, image_response_sqs_service: ImageResponseSQSService):
+    def __init__(self, openai: OpenAI, s3client: boto3.client, bucket_name: str, image_response_sqs_service: ImageResponseSQSService):
         self.__openai = openai
         self.__s3 = s3client
         self.__bucket_name = bucket_name
-        self.__scenes_as_image_prompt_convert_executer = scenes_as_image_prompt_convert_executer
         self.__image_response_sqs_service = image_response_sqs_service
 
     def request_vision(self, diary_id: int, character_id: int, character_base_prompt: str, scenes: list[str]):
-        image_prompt = self.__scenes_as_image_prompt_convert_executer.execute(scenes)
         response = self.__openai.images.generate(
             model="dall-e-3",
             n=1,
             size="1024x1024",
-            prompt=image_prompt,
+            prompt=DALLE3_IMAGE_PROMPT.replace("$cut_prompt", "\n".join(scenes)),
             quality="hd",
             response_format="b64_json"
         )
