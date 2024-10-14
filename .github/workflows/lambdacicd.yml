@@ -21,7 +21,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Zip Lambda code
         run: |
-          zip -r lambda.zip ./fourtooncookie-diaryimage-ai-apply-lambda
+          zip -r lambda.zip ./fourtooncookie-diaryimage-ai-apply-lambda .github/workflows/appspec.yml
       - name: sync to S3
         run: |
           BUCKET_NAME=${{ secrets.BUCKET_NAME }}
