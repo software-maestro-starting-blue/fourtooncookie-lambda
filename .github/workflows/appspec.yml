@@ -4,4 +4,4 @@ Resources:
       Type: AWS::Lambda::Function
       Properties:
         Name: "fourtooncookie-diaryimage-ai-apply-lambda"
-        Alias: "LATEST"
+        CurrentVersion: "1"
