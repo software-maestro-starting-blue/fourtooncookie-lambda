@@ -21,4 +21,5 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       # Upload a file to AWS s3
       - name:  Copy index.html to s3
-        run: ls
+        run: cat README.md |
+          aws s3 cp README.md s3://${{ secrets.BUCKET_NAME }}/lambda/file.txt \
