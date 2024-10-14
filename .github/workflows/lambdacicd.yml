@@ -2,7 +2,9 @@ name: CI/CD
 
 on:
   workflow_dispatch:
-
+env:
+  BUCKET_NAME : "BUCKET-NAME"
+  AWS_REGION : "AWS-REGION"
 permissions:
   id-token: write # This is required for requesting the JWT
   contents: read  # This is required for actions/checkout
