@@ -1,3 +1,6 @@
 version: 0.0
 Resources:
-  - fourtooncookie-diaryimage-ai-apply-lambda
+  - fourtooncookieLambdaFunction:
+      Type: AWS::Lambda::Function
+      Properties:
+        Name: "fourtooncookie-diaryimage-ai-apply-lambda"
