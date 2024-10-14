@@ -26,13 +26,13 @@ jobs:
         run: |
           BUCKET_NAME=${{ secrets.BUCKET_NAME }}
           aws s3 cp myLambda.zip s3://$BUCKET_NAME/lambda-deploy/lambda.zip
-      - name: Deploy to Lambda using CodeDeploy
-        uses: aws-actions/aws-codedeploy-deploy@v1
-        with:
-          application-name: fourtooncookie-lambda-prompting-deploy  # CodeDeploy 애플리케이션 이름
-          deployment-group: fourtooncookie-prompting-lambda-deploy-group        # CodeDeploy 배포 그룹 이름
-          deployment-config: CodeDeployDefault.LambdaAllAtOnce  # 트래픽 전환 방식
-          bundle-type: zip
-          s3-bucket: $BUCKET_NAME
-          s3-key: lambda-deploy/lambda.zip
-          file-exists-behavior: OVERWRITE
+      # - name: Deploy to Lambda using CodeDeploy
+      #   uses: aws-actions/aws-codedeploy-deploy@v1
+      #   with:
+      #     application-name: fourtooncookie-lambda-prompting-deploy  # CodeDeploy 애플리케이션 이름
+      #     deployment-group: fourtooncookie-prompting-lambda-deploy-group        # CodeDeploy 배포 그룹 이름
+      #     deployment-config: CodeDeployDefault.LambdaAllAtOnce  # 트래픽 전환 방식
+      #     bundle-type: zip
+      #     s3-bucket: $BUCKET_NAME
+      #     s3-key: lambda-deploy/lambda.zip
+      #     file-exists-behavior: OVERWRITE
