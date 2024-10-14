@@ -22,4 +22,4 @@ jobs:
       # Upload a file to AWS s3
       - name: Copy README.md to S3
         run: |
-          aws s3 sync ./ s3://${{ secrets.BUCKET_NAME }}/lambda --delete
+          aws s3 sync ./ s3://${{ secrets.BUCKET_NAME }}/lambda/ --delete
