@@ -16,8 +16,8 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          role-to-assume: ROLE-TO-ASSUME
-          role-session-name: samplerolesession
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE }}
+          role-session-name: GitHubActionsDeploySession
           aws-region: ${{ secrets.AWS_REGION }}
       # Upload a file to AWS s3
       - name:  Copy index.html to s3
