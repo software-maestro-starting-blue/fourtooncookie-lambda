@@ -17,6 +17,7 @@ from executer.convert.synopsis_to_scene_convert_executer import SynopsisToSceneC
 from executer.batch_executer import BatchExecuter
 from executer.prompt.simple_portkey_prompt_executer import SimplePortkeyPromptExecuter
 from executer.convert.synopsis_to_words_convert_executer import SynopsisToWordsConvertExecuter
+from executer.convert.storyline_to_scenes_convert_executer import StorylineToScenesConvertExecuter
 
 from visionrequest.vision_request_service import VisionRequestService
 from visionrequest.dall_e_3.dall_e_3_vision_request_service import DallE3VisionRequestService
@@ -52,16 +53,24 @@ llm_service: LLMService = PortkeyLLMService(portkey)
 SYNOPSIS_PROMPT_ID = os.environ["SYNOPSIS_PROMPT_ID"]
 REFINE_SCENE_PROMPT_ID = os.environ["REFINE_SCENE_PROMPT_ID"]
 
+SCENE_GENERATION_1_PROMPT_ID = os.environ["SCENE_GENERATION_1_PROMPT_ID"]
+SCENE_GENERATION_2_PROMPT_ID = os.environ["SCENE_GENERATION_2_PROMPT_ID"]
+SCENE_GENERATION_3_PROMPT_ID = os.environ["SCENE_GENERATION_3_PROMPT_ID"]
+
+common_executers = [
+    SimplePortkeyPromptExecuter(llm_service, SCENE_GENERATION_1_PROMPT_ID),
+    StorylineToScenesConvertExecuter(),
+    BatchExecuter(SimplePortkeyPromptExecuter(llm_service, SCENE_GENERATION_2_PROMPT_ID)),
+    BatchExecuter(SimplePortkeyPromptExecuter(llm_service, SCENE_GENERATION_3_PROMPT_ID)),
+    BatchExecuter(StringToJsonConvertExecuter())
+]
+
 executers_by_vision_type: dict[str, list[Executer]] = {
-    "DALL_E_3": [
-        SimplePortkeyPromptExecuter(llm_service, SYNOPSIS_PROMPT_ID),
-        StringToJsonConvertExecuter(),
+    "DALL_E_3": common_executers + [
         BatchExecuter(SynopsisToSceneConvertExecuter()),
         BatchExecuter(SimplePortkeyPromptExecuter(llm_service, REFINE_SCENE_PROMPT_ID)),
     ],
-    "STABLE_DIFFUSION": [
-        SimplePortkeyPromptExecuter(llm_service, SYNOPSIS_PROMPT_ID),
-        StringToJsonConvertExecuter(),
+    "STABLE_DIFFUSION": common_executers + [
         BatchExecuter(SynopsisToWordsConvertExecuter()),
     ]
 }
