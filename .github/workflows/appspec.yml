@@ -5,4 +5,4 @@ Resources:
       Properties:
         Name: "fourtooncookie-diaryimage-ai-apply-lambda"
         Alias: "live"
-        CurrentVersion: "1"
+        CurrentVersion: "2"
