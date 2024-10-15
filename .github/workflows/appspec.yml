@@ -1,9 +1,0 @@
-version: 0.0
-Resources:
-  - fourtooncookieLambdaFunction:
-      Type: AWS::Lambda::Function
-      Properties:
-        Name: "fourtooncookie-diaryimage-ai-apply-lambda"
-        Alias: "live"
-        CurrentVersion: "2"
-        TargetVersion: "1"
