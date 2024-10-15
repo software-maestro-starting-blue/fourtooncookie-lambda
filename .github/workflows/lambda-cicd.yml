@@ -21,7 +21,6 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Zip Lambda code
         run: |
-          cp ./.github/workflows/appspec.yml ./fourtooncookie-diaryimage-ai-apply-lambda/appspec.yml
           cd fourtooncookie-diaryimage-ai-apply-lambda
           zip -r ../lambda.zip .
           cd ..
@@ -42,18 +41,6 @@ jobs:
             --s3-key $S3_KEY
 
           # Publish a new version of the Lambda function
-          # NEW_VERSION=$(aws lambda publish-version --function-name $LAMBDA_FUNCTION_NAME --query 'Version' --output text)
+          NEW_VERSION=$(aws lambda publish-version --function-name $LAMBDA_FUNCTION_NAME --query 'Version' --output text)
           
-          # echo "Published new Lambda version: $NEW_VERSION"
-      - name: Deploy to Lambda using AWS CLI and CodeDeploy
-        run: |
-          APPLICATION_NAME=fourtooncookie-lambda-prompting-deploy
-          DEPLOYMENT_GROUP=fourtooncookie-prompting-lambda-deploy-group
-          BUCKET_NAME=${{ secrets.BUCKET_NAME }}
-          S3_KEY=lambda-deploy/lambda.zip
-
-          aws deploy create-deployment \
-            --application-name $APPLICATION_NAME \
-            --deployment-group-name $DEPLOYMENT_GROUP \
-            --deployment-config-name CodeDeployDefault.LambdaAllAtOnce \
-            --s3-location bucket=$BUCKET_NAME,key=$S3_KEY,bundleType=zip
+          echo "Published new Lambda version: $NEW_VERSION"
