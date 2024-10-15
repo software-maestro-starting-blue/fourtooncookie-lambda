@@ -40,9 +40,9 @@ jobs:
             --s3-key $S3_KEY
 
           # Publish a new version of the Lambda function
-          NEW_VERSION=$(aws lambda publish-version --function-name $LAMBDA_FUNCTION_NAME --query 'Version' --output text)
+          # NEW_VERSION=$(aws lambda publish-version --function-name $LAMBDA_FUNCTION_NAME --query 'Version' --output text)
           
-          echo "Published new Lambda version: $NEW_VERSION"
+          # echo "Published new Lambda version: $NEW_VERSION"
       - name: Deploy to Lambda using AWS CLI and CodeDeploy
         run: |
           APPLICATION_NAME=fourtooncookie-lambda-prompting-deploy
