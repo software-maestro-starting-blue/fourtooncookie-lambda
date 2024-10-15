@@ -21,6 +21,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Zip Lambda code
         run: |
+          cp ./.github/workflows/appspec.yml ./fourtooncookie-diaryimage-ai-apply-lambda/appspec.yml
           cd fourtooncookie-diaryimage-ai-apply-lambda
           zip -r ../lambda.zip .
           cd ..
@@ -28,7 +29,7 @@ jobs:
         run: |
           BUCKET_NAME=${{ secrets.BUCKET_NAME }}
           aws s3 cp lambda.zip s3://$BUCKET_NAME/lambda-deploy/lambda.zip
-      - name: Update Lambda function code and publish a new version
+      - name: Update Lambda function code
         run: |
           LAMBDA_FUNCTION_NAME=fourtooncookie-diaryimage-ai-apply-lambda
           BUCKET_NAME=${{ secrets.BUCKET_NAME }}
@@ -39,7 +40,15 @@ jobs:
             --function-name $LAMBDA_FUNCTION_NAME \
             --s3-bucket $BUCKET_NAME \
             --s3-key $S3_KEY
+          
+          # Wait for the function code update to complete
+          aws lambda wait function-updated \
+            --function-name $LAMBDA_FUNCTION_NAME
 
+      - name: Publish a new Lambda version
+        run: |
+          LAMBDA_FUNCTION_NAME=fourtooncookie-diaryimage-ai-apply-lambda
+          
           # Publish a new version of the Lambda function
           NEW_VERSION=$(aws lambda publish-version --function-name $LAMBDA_FUNCTION_NAME --query 'Version' --output text)
           
