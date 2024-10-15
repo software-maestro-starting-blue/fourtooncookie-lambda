@@ -21,7 +21,6 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Zip Lambda code
         run: |
-          cp ./.github/workflows/appspec.yml ./fourtooncookie-diaryimage-ai-apply-lambda/appspec.yml
           cd fourtooncookie-diaryimage-ai-apply-lambda
           zip -r ../lambda.zip .
           cd ..
