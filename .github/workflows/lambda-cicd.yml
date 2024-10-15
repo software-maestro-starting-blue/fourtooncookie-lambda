@@ -27,6 +27,22 @@ jobs:
         run: |
           BUCKET_NAME=${{ secrets.BUCKET_NAME }}
           aws s3 cp lambda.zip s3://$BUCKET_NAME/lambda-deploy/lambda.zip
+      - name: Update Lambda function code and publish a new version
+        run: |
+          LAMBDA_FUNCTION_NAME=fourtooncookie-diaryimage-ai-apply-lambda
+          BUCKET_NAME=${{ secrets.BUCKET_NAME }}
+          S3_KEY=lambda-deploy/lambda.zip
+
+          # Update the Lambda function code from S3
+          aws lambda update-function-code \
+            --function-name $LAMBDA_FUNCTION_NAME \
+            --s3-bucket $BUCKET_NAME \
+            --s3-key $S3_KEY
+
+          # Publish a new version of the Lambda function
+          NEW_VERSION=$(aws lambda publish-version --function-name $LAMBDA_FUNCTION_NAME --query 'Version' --output text)
+          
+          echo "Published new Lambda version: $NEW_VERSION"
       - name: Deploy to Lambda using AWS CLI and CodeDeploy
         run: |
           APPLICATION_NAME=fourtooncookie-lambda-prompting-deploy
