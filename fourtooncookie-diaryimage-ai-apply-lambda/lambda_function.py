@@ -1,5 +1,17 @@
 from config import *
 
+def execute_executers(vision_type, content):
+    scene_generate_executers = executers_by_vision_type[vision_type]
+    
+    variables = content
+
+    for executer in scene_generate_executers:
+        if not executer.validate_variables(variables):
+            raise Exception("Invalid variables", variables, executer.__class__.__name__)
+        
+        variables = executer.execute(variables)
+    
+    return variables
 
 def lambda_handler(body, context):
     try:
@@ -19,17 +31,20 @@ def lambda_handler(body, context):
     
     try:
         # LLM과 prompt 활용하여 내용 정체
-        scene_generate_executers = executers_by_vision_type[character_vision_type]
-        
-        variables = content
+        scenes = None
 
-        for executer in scene_generate_executers:
-            if not executer.validate_variables(variables):
-                raise Exception("Invalid variables", variables, executer.__class__.__name__)
-            
-            variables = executer.execute(variables)
-        
-        scenes = variables
+        count = 0
+
+        while not scenes:
+            try:
+                count += 1
+                scenes = execute_executers(character_vision_type, content)
+            except Exception as e:
+                if count < PROMPT_RETRY_COUNT:
+                    print("Retry")
+                    continue
+                else:
+                    raise e
         
         # vision request로 요청 보내기
         vision_request_service = vision_request_services[character_vision_type]
