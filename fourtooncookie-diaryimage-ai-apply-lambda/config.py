@@ -12,11 +12,10 @@ from llm.portkey_llm_service import PortkeyLLMService
 
 from executer.executer import Executer
 
-from executer.convert.string_to_json_convert_executer import StringToJsonConvertExecuter
-from executer.convert.synopsis_to_scene_convert_executer import SynopsisToSceneConvertExecuter
 from executer.batch_executer import BatchExecuter
 from executer.prompt.simple_portkey_prompt_executer import SimplePortkeyPromptExecuter
-from executer.convert.synopsis_to_words_convert_executer import SynopsisToWordsConvertExecuter
+from executer.convert.scene_to_sdprompt_convert_executer import SceneToSDPromptConvertExecuter
+from executer.convert.storyline_to_scenes_convert_executer import StorylineToScenesConvertExecuter
 
 from visionrequest.vision_request_service import VisionRequestService
 from visionrequest.dall_e_3.dall_e_3_vision_request_service import DallE3VisionRequestService
@@ -49,20 +48,25 @@ image_response_sqs_service: ImageResponseSQSService = ImageResponseSQSService(sq
 
 llm_service: LLMService = PortkeyLLMService(portkey)
 
-SYNOPSIS_PROMPT_ID = os.environ["SYNOPSIS_PROMPT_ID"]
 REFINE_SCENE_PROMPT_ID = os.environ["REFINE_SCENE_PROMPT_ID"]
 
+STORY_TO_SCENES_PROMPT_ID = os.environ["STORY_TO_SCENES_PROMPT_ID"]
+SCENES_TO_WORDS_PROMPT_ID = os.environ["SCENES_TO_WORDS_PROMPT_ID"]
+
+common_executers = [
+    SimplePortkeyPromptExecuter(llm_service, STORY_TO_SCENES_PROMPT_ID),
+    StorylineToScenesConvertExecuter(),
+]
+
 executers_by_vision_type: dict[str, list[Executer]] = {
-    "DALL_E_3": [
-        SimplePortkeyPromptExecuter(llm_service, SYNOPSIS_PROMPT_ID),
-        StringToJsonConvertExecuter(),
-        BatchExecuter(SynopsisToSceneConvertExecuter()),
+    "DALL_E_3": common_executers + [
         BatchExecuter(SimplePortkeyPromptExecuter(llm_service, REFINE_SCENE_PROMPT_ID)),
+        # result: list[str] (각각 한 달리 장면 프롬프트)
     ],
-    "STABLE_DIFFUSION": [
-        SimplePortkeyPromptExecuter(llm_service, SYNOPSIS_PROMPT_ID),
-        StringToJsonConvertExecuter(),
-        BatchExecuter(SynopsisToWordsConvertExecuter()),
+    "STABLE_DIFFUSION": common_executers + [
+        BatchExecuter(SimplePortkeyPromptExecuter(llm_service, SCENES_TO_WORDS_PROMPT_ID)),
+        BatchExecuter(SceneToSDPromptConvertExecuter()),
+        # result: list[str] (각각 한 장면에 대한 SD 프롬프트)
     ]
 }
 
