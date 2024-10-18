@@ -16,8 +16,21 @@ class SceneToSDPromptConvertExecuter(ConvertExecuter):
         action = match.group(4).strip()
         expression = match.group(5).strip()
 
+        words = []
 
-        return "{}, in the {}, {}, {}, {}".format(time, background, weather, action, expression)
+        for word in [
+            time,
+            weather,
+            action,
+            expression
+        ]:
+            if word.lower() != "none":
+                words.append(word.lower())
+        
+        if background.lower() != "none": # background는 in the를 붙여줌
+            words.append(f"in the {background.lower()}")
+
+        return ", ".join(words)
     
 
     def validate_variables(self, variables) -> bool:
